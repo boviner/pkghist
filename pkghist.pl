@@ -124,8 +124,6 @@ sub ListLogFile {
 
 		my ($stat1, $stat2);
 		my $j = $rindex[$i];
-		# sanity check. comment out after testing
-#		die if ($old[ $order1[$j] ] != $old[ $i ]);
 		
 		# get previous pkg entry
 		my ($mtime0, $pkg0, $ver0, $stat0) = @{$old[ $order1[$j-1] ]};
@@ -142,7 +140,6 @@ sub ListLogFile {
 			if ($stat =~ /^deinstall/) { $stat1 = "uninstall"; }
 		}
 			
-#		print "$stat1\t$mftime\t$pkg ($ver) [$stat]\n";
 		$stat1 = "$stat1>" if ($stat1);
 		$_ = sprintf "%14s%6s  %s (%s) %s", $stat1, $mftime, $pkg, $ver, $stat2;
 		print "$_\n";
@@ -192,12 +189,12 @@ sub UpdateLogFile {
 			# no change to entry
 		} else {
 			push @changes, $line;
-	if ($stat =~ /^deinstall/) {
-		print "Uninstalled> ";
-	} else {
-		print "Changed/added> ";
-	}
-	print localtime($mtime) . " $pkg (".$ver.")\n";
+			if ($stat =~ /^deinstall/) {
+				print "Uninstalled> ";
+			} else {
+				print "Changed/added> ";
+			}
+			print localtime($mtime) . " $pkg (".$ver.")\n";
 		}
 	}
 
@@ -226,7 +223,7 @@ sub UpdateLogFile {
 			}
 
 			push @changes, [$mtime1, $pkg, "", ""];
-	print "Purged> ".localtime($mtime1) . " $pkg (".$ver.")\n";
+			print "Purged> ".localtime($mtime1) . " $pkg (".$ver.")\n";
 		}
 	}
 
