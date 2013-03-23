@@ -1,0 +1,65 @@
+This is a small utility to keep track of package changes in a Debian-based
+system like Ubuntu, and of course Debian. 
+
+A typical output from pkghist looks like this:
+
+2013-03-06 (Wed)
+
+       purged> 13:30  ecryptfs-utils ()
+               12:37  ecryptfs-utils (68-1+lenny1)
+               12:37  keyutils (1.2-9)
+               12:37  libecryptfs0 (68-1+lenny1)
+               12:37  libgpgme11 (1.1.6-2)
+               12:37  libpth20 (2.0.7-12)
+       purged> 12:36  mimms ()
+    uninstall> 12:36  libmms0 (0.4-2)
+
+2013-02-28 (Thu)
+
+               23:36  mimms (3.2.1-1)
+               23:36  libmms0 (0.4-2)
+
+2013-01-30 (Wed)
+
+      upgrade> 17:16  samba-common (2:3.2.5-4lenny15)
+               17:16  smbfs (2:3.2.5-4lenny15)
+      upgrade> 17:16  samba (2:3.2.5-4lenny15)
+      upgrade> 17:16  smbclient (2:3.2.5-4lenny15)
+
+...snipped...
+
+While tools like dpkg-query tells you what is currently installed, it does
+not tell you when it was installed, what has been upgraded, what was been
+removed etc. It can be useful to know these information, especially if you
+set the system to do unattended upgrades.
+
+== Others ==
+
+Ubuntu users already have something like:
+less /var/log/apt/history.log
+
+On other Debian systems:
+less /var/log/dpkg.log
+
+A quick google found other similar ones like this: 
+http://linuxcommando.blogspot.com/2008/08/how-to-show-apt-log-history.html
+
+I prefer something that is formatted for readability and works for not just
+Ubuntu but any Debian-based systems. Plus something that keeps a complete
+history, not just what is available in the log file.
+
+== Description ==
+
+pkghist is written in Perl and uses dpkg-query to get current package info,
+and compares this to what was stored in a history file (default
+/var/lib/dpkg/pkghist.log). By comparing the differences, we know what has
+been installed, upgraded, purged etc.
+
+pkghist needs to be run after packages has been changed, so one way to keep
+it updated is to put it into cron:
+30 * * * * /usr/bin/pkghist.pl -u
+
+If you do not want to run as root, you need to specify an alternative
+location for the history file like this:
+30 * * * * /usr/bin/pkghist.pl -u -f ~/.pkghist.log
+
