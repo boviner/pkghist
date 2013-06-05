@@ -1,5 +1,5 @@
 This is a small utility to keep track of package changes in a Debian-based
-system like Ubuntu, and of course Debian. 
+system like Ubuntu, and of course Debian itself. 
 
 A typical output from pkghist looks like this:
 
@@ -62,4 +62,7 @@ it updated is to put it into cron:
 If you do not want to run as root, you need to specify an alternative
 location for the history file like this:
 30 * * * * /usr/bin/pkghist.pl -u -f ~/.pkghist.log
+
+Another better way is to create a dpkg post-invoke hook (by creating say 80-updatepkghist in /etc/apt/apt.conf.d):
+DPkg::Post-Invoke { "/usr/bin/pkghist.pl -u" };
 
